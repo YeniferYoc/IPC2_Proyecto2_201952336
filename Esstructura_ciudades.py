@@ -48,6 +48,10 @@ class ListaDoble:
         
             nodoTemporal.objeto_ciudad.filas.imprimirLista()
 
+            print("")
+
+            nodoTemporal.objeto_ciudad.unidades_militares.imprimirLista()
+
             nodoTemporal = nodoTemporal.siguiente
 
         print("--------------------------------------------------------------------------------")

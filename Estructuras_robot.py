@@ -1,16 +1,16 @@
 class Nodo:
-    def __init__(self, objeto_fila):
-        self.objeto_fila = objeto_fila
+    def __init__(self, objeto_robot):
+        self.objeto_robot = objeto_robot
         self.siguiente = None
         self.anterior = None
 
-class ListaDoble_fila:
+class ListaDoble_robot:
     def __init__(self):
         self.head = None
         self.end = None
 
-    def añadirNodoPrincipio(self, obj_fila):
-        nuevoNodo = Nodo(obj_fila)
+    def añadirNodoPrincipio(self, obj_robot):
+        nuevoNodo = Nodo(obj_robot)
 
         #Validamos si la lista esta vacia
         if self.head == None:
@@ -27,14 +27,14 @@ class ListaDoble_fila:
         
     def imprimirLista(self):
         print("--------------------------------------------------------------------------------")
-        print("---------------------------------- FILAS ------------------------------------")
+        print("---------------------------------- ROBOTS ------------------------------------")
         nodoTemporal = Nodo("")
 
         nodoTemporal = self.head
         contador = 0
         while nodoTemporal != None:
             contador += 1
-            print("FILA:"+str(contador)+" -> "+str(nodoTemporal.objeto_fila.numero)+" CADENA DE FILA: "+nodoTemporal.objeto_fila.lista)
+            print("ROBOT:"+str(contador)+" -> "+nodoTemporal.objeto_robot.nombre+" TIPO: "+nodoTemporal.objeto_robot.tipo+" CAPACIDAD: "+nodoTemporal.objeto_robot.capacidad)
             nodoTemporal = nodoTemporal.siguiente
 
         print("--------------------------------------------------------------------------------")
