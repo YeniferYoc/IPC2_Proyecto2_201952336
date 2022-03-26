@@ -26,15 +26,15 @@ class ListaDoble_robot:
             self.end = nuevoNodo
         
     def imprimirLista(self):
-        print("--------------------------------------------------------------------------------")
-        print("---------------------------------- ROBOTS ------------------------------------")
+        print("********************************************************************************")
+        print("---------------------------------- ROBOTS --------------------------------------")
         nodoTemporal = Nodo("")
 
         nodoTemporal = self.head
         contador = 0
         while nodoTemporal != None:
             contador += 1
-            print("ROBOT:"+str(contador)+" -> "+nodoTemporal.objeto_robot.nombre+" TIPO: "+nodoTemporal.objeto_robot.tipo+" CAPACIDAD: "+nodoTemporal.objeto_robot.capacidad)
+            print("ROBOT: "+str(contador)+" -> "+nodoTemporal.objeto_robot.nombre+"\t TIPO: "+nodoTemporal.objeto_robot.tipo+"\t CAPACIDAD: "+nodoTemporal.objeto_robot.capacidad)
             nodoTemporal = nodoTemporal.siguiente
 
         print("--------------------------------------------------------------------------------")

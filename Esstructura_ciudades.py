@@ -36,21 +36,22 @@ class ListaDoble:
 
 
     def imprimirLista(self):
-        print("--------------------------------------------------------------------------------")
-        print("-------------------------------------- CIUDADES -----------------------------------")
+        
+        print("-------------------------------------- CIUDADES -------------------------------------- ")
         nodoTemporal = Nodo("")
 
         nodoTemporal = self.head
         contador = 0
         while nodoTemporal != None:
             contador += 1
-            print("Nodo:"+str(contador)+" -> "+"NOMBRE: "+nodoTemporal.objeto_ciudad.nombre+" FILAS:"+str(nodoTemporal.objeto_ciudad.cant_filas)+" COLUMNAS: "+nodoTemporal.objeto_ciudad.cant_columnas)
-        
+            print(" -> "+"NOMBRE: "+nodoTemporal.objeto_ciudad.nombre+" FILAS:"+str(nodoTemporal.objeto_ciudad.cant_filas)+" COLUMNAS: "+nodoTemporal.objeto_ciudad.cant_columnas)
+            print("")
             nodoTemporal.objeto_ciudad.filas.imprimirLista()
 
             print("")
 
             nodoTemporal.objeto_ciudad.unidades_militares.imprimirLista()
+            print("--------------------------------------------------------------------------------")
 
             nodoTemporal = nodoTemporal.siguiente
 

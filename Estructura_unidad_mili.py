@@ -26,16 +26,16 @@ class ListaDoble_unidad:
             self.end = nuevoNodo
         
     def imprimirLista(self):
-        print("--------------------------------------------------------------------------------")
-        print("---------------------------------- UNIDADES MILITARES ------------------------------------")
+        
+        print("\t UNIDADES MILITARES: ")
         nodoTemporal = Nodo("")
 
         nodoTemporal = self.head
         contador = 0
         while nodoTemporal != None:
             contador += 1
-            print("FILA:"+str(contador)+" -> "+str(nodoTemporal.objeto_unidad.fila)+" COLUMNA: "+str(nodoTemporal.objeto_unidad.columna)+" CAPACIDAD: "+str(nodoTemporal.objeto_unidad.capacidad))
+            print("FILA: -> "+str(nodoTemporal.objeto_unidad.fila)+" COLUMNA: "+str(nodoTemporal.objeto_unidad.columna)+" CAPACIDAD: "+str(nodoTemporal.objeto_unidad.capacidad))
             nodoTemporal = nodoTemporal.siguiente
 
-        print("--------------------------------------------------------------------------------")
+        
 
