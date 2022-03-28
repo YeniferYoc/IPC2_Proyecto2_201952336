@@ -37,8 +37,8 @@ def menu():
         print("--------------------------------------------------------------------")
         print("1. CARGAR XML")
         print("2. ELEGIR MISION")
-        print("3. VER PATRON ELEGIDO")
-        print("4. ELEGIR NUEVO PATRON")
+        print("3. VER CIUDAD ELEGIDA")
+        print("4. VER GRAFICA DE LA CIUDAD")
         print("5. REALIZAR CAMBIOS")
         print("6. VER NUEVO PATRON")
         print("7. SALIR")
@@ -76,6 +76,7 @@ def menu():
                     for fila in filas:
                         numero = fila.attributes['numero'].value 
                         lista_letras = fila.childNodes[0].data
+                        lista_letras = lista_letras.replace('"','')
                         fila_nueva = Fila(numero, lista_letras)
                         lista_filas.añadirNodoPrincipio(fila_nueva)
 
@@ -107,6 +108,7 @@ def menu():
                             for fila in filas2:
                                 numero_sobre = fila.attributes['numero'].value 
                                 lista_letras_sobre = fila.childNodes[0].data
+                                lista_letras_sobre = lista_letras_sobre.replace('"','')
                                 fila_nueva_sobre = Fila(numero_sobre, lista_letras_sobre)
                                 lista_filas_sobre.añadirNodoPrincipio(fila_nueva_sobre)
                             nodo_temporal.objeto_ciudad.filas = lista_filas_sobre
@@ -139,6 +141,7 @@ def menu():
                             for fila in filas:
                                 numero = fila.attributes['numero'].value 
                                 lista_letras = fila.childNodes[0].data
+                                lista_letras = lista_letras.replace('"','')
                                 fila_nueva = Fila(numero, lista_letras)
                                 lista_filas.añadirNodoPrincipio(fila_nueva)
                             
@@ -504,9 +507,6 @@ def Seleccionar_ciudad_celda(tipo_celda, tipo_robot, lista_ciudadess, lista_robo
                     print("NO SE PUEDE REALIZAR ESTA MISION PORQUE NO HAY LOS RECURSOS DISPONIBLES")
                     
                     return arreglo_ciudad_celda_rob
-
-                
-
 
 def lista_rescates (tipo, ciudad):
     lista_filas = ciudad.filas
