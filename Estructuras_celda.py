@@ -34,7 +34,7 @@ class ListaDoble_celda:
        
         while nodoTemporal != None:
             
-            print("FILA: "+str(nodoTemporal.objeto_celda.fila)+" COLUMNA:  "+str(nodoTemporal.objeto_celda.columna)+" TIPO: "+nodoTemporal.objeto_celda.tipo)
+            print("FILA: "+str(nodoTemporal.objeto_celda.fila)+" COLUMNA:  "+str(nodoTemporal.objeto_celda.columna)+" TIPO: "+str(nodoTemporal.objeto_celda.tipo))
             nodoTemporal = nodoTemporal.siguiente
 
         print("--------------------------------------------------------------------------------")

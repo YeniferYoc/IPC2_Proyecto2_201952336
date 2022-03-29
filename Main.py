@@ -19,13 +19,17 @@ import Estructuras_robot
 import Estructura_unidad_mili
 import Estructuras_celda
 from Unidad_militar import *
-
+from Matriz import *
 
 lista_ciudades = Esstructura_ciudades.ListaDoble()
 lista_robots = Estructuras_robot.ListaDoble_robot()
 ciudad_elegida = None
 celda_rescatar  = None
+civil = False
+recurso = False
 robot_elegido = None
+matriz = Matriz()
+
 
 
 def menu(): 
@@ -37,11 +41,9 @@ def menu():
         print("--------------------------------------------------------------------")
         print("1. CARGAR XML")
         print("2. ELEGIR MISION")
-        print("3. VER CIUDAD ELEGIDA")
-        print("4. VER GRAFICA DE LA CIUDAD")
-        print("5. REALIZAR CAMBIOS")
-        print("6. VER NUEVO PATRON")
-        print("7. SALIR")
+        print("3. VER GRAFICA DE LA CIUDAD")
+        print("4. EJECUTAR MISION")
+        print("5. SALIR")
         print("--------------------------------------------------------------------")
         print("")
         opcion = int(input("DIGITE EL NUMERO DE LA OPCION CORRESPONDIENTE "))
@@ -66,15 +68,15 @@ def menu():
                 if nodo_temporal == None:#SI LA LISTA ESTA VACIA NO HAY NADA QUE VERIFICAR
                     #print("la lista esta vacia ")
                     for node in ciudad.getElementsByTagName("nombre"):
-                        cant_filas = node.getAttribute("filas")
+                        cant_filas = int(node.getAttribute("filas"))
                         #print(cant_filas)
-                        cant_columnas = node.getAttribute("columnas")
+                        cant_columnas = int(node.getAttribute("columnas"))
                         #print(cant_columnas)
                     
                     filas = ciudad.getElementsByTagName('fila')
                     lista_filas = Estructuras_filas.ListaDoble_fila()
                     for fila in filas:
-                        numero = fila.attributes['numero'].value 
+                        numero = int(fila.attributes['numero'].value) 
                         lista_letras = fila.childNodes[0].data
                         lista_letras = lista_letras.replace('"','')
                         fila_nueva = Fila(numero, lista_letras)
@@ -83,9 +85,9 @@ def menu():
                     unidadMilitares = ciudad.getElementsByTagName('unidadMilitar')
                     lista_unidades = Estructura_unidad_mili.ListaDoble_unidad()
                     for unidad in unidadMilitares:
-                        fila_u = unidad.attributes['fila'].value
-                        columna_u = unidad.attributes['columna'].value
-                        capacidad_u = unidad.childNodes[0].data
+                        fila_u = int(unidad.attributes['fila'].value)
+                        columna_u = int(unidad.attributes['columna'].value)
+                        capacidad_u = int(unidad.childNodes[0].data)
                         unidad_nueva = Unidad_militar(fila_u, columna_u, capacidad_u)
                         lista_unidades.añadirNodoPrincipio(unidad_nueva)
 
@@ -100,13 +102,13 @@ def menu():
                             #print("si es repetido"+nom)
                             for node in ciudad.getElementsByTagName("nombre"):
                                 #SOBREESCRIBIMOS LOS DATOS DE CANTIDAD FILAS Y COLUMNAS
-                                nodo_temporal.objeto_ciudad.cant_filas = node.getAttribute("filas")
-                                nodo_temporal.objeto_ciudad.cant_columnas = node.getAttribute("columnas")
+                                nodo_temporal.objeto_ciudad.cant_filas = int(node.getAttribute("filas"))
+                                nodo_temporal.objeto_ciudad.cant_columnas = int(node.getAttribute("columnas"))
                             #SOBREESCRIBIMOS LA LISTA DE LAS FILAS
                             filas2 = ciudad.getElementsByTagName('fila')
                             lista_filas_sobre = Estructuras_filas.ListaDoble_fila()
                             for fila in filas2:
-                                numero_sobre = fila.attributes['numero'].value 
+                                numero_sobre = int(fila.attributes['numero'].value) 
                                 lista_letras_sobre = fila.childNodes[0].data
                                 lista_letras_sobre = lista_letras_sobre.replace('"','')
                                 fila_nueva_sobre = Fila(numero_sobre, lista_letras_sobre)
@@ -117,9 +119,9 @@ def menu():
                             unidadMilitares2 = ciudad.getElementsByTagName('unidadMilitar')
                             lista_unidades_sobres = Estructura_unidad_mili.ListaDoble_unidad()
                             for unidad in unidadMilitares2:
-                                fila_u2 = unidad.attributes['fila'].value
-                                columna_u2 = unidad.attributes['columna'].value
-                                capacidad_u2 = unidad.childNodes[0].data
+                                fila_u2 = int(unidad.attributes['fila'].value)
+                                columna_u2 = int(unidad.attributes['columna'].value)
+                                capacidad_u2 = int(unidad.childNodes[0].data)
                                 unidad_nueva_sobres = Unidad_militar(fila_u2, columna_u2, capacidad_u2)
                                 lista_unidades_sobres.añadirNodoPrincipio(unidad_nueva_sobres)
                             nodo_temporal.objeto_ciudad.unidades_militares = lista_unidades_sobres
@@ -131,15 +133,15 @@ def menu():
                     else: 
                             #print("esta en el else "+nom)
                             for node in ciudad.getElementsByTagName("nombre"):
-                                cant_filas = node.getAttribute("filas")
+                                cant_filas = int(node.getAttribute("filas"))
                                 #print(cant_filas)
-                                cant_columnas = node.getAttribute("columnas")
+                                cant_columnas = int(node.getAttribute("columnas"))
                                 #print(cant_columnas)
                             
                             filas = ciudad.getElementsByTagName('fila')
                             lista_filas = Estructuras_filas.ListaDoble_fila()
                             for fila in filas:
-                                numero = fila.attributes['numero'].value 
+                                numero = int(fila.attributes['numero'].value) 
                                 lista_letras = fila.childNodes[0].data
                                 lista_letras = lista_letras.replace('"','')
                                 fila_nueva = Fila(numero, lista_letras)
@@ -148,9 +150,9 @@ def menu():
                             unidadMilitares = ciudad.getElementsByTagName('unidadMilitar')
                             lista_unidades = Estructura_unidad_mili.ListaDoble_unidad()
                             for unidad in unidadMilitares:
-                                fila_u = unidad.attributes['fila'].value
-                                columna_u = unidad.attributes['columna'].value
-                                capacidad_u = unidad.childNodes[0].data
+                                fila_u = int(unidad.attributes['fila'].value)
+                                columna_u = int(unidad.attributes['columna'].value)
+                                capacidad_u = int(unidad.childNodes[0].data)
                                 unidad_nueva = Unidad_militar(fila_u, columna_u, capacidad_u)
                                 lista_unidades.añadirNodoPrincipio(unidad_nueva)
 
@@ -244,143 +246,213 @@ def menu():
                 arreglo = Seleccionar_ciudad_celda('C','ChapinRescue', lista_ciudades, lista_robots )
                 print("")
                 print("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° RESUMEN DE MISION °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-                ciudad_ = arreglo[0]
-                celda_ = arreglo[1]
-                robot_ = arreglo[2]
-                print("-----------------------------> CIUDAD: \t"+ciudad_.nombre)
+                ciudad_elegida = arreglo[0]
+                celda_rescatar = arreglo[1]
+                robot_elegido = arreglo[2]
+                civil = True
+                print("-----------------------------> CIUDAD: \t"+ciudad_elegida.nombre)
                 print("-----------------------------> CELDA A RESCATAR: ")
-                celda_.mostrar_celda()
+                celda_rescatar.mostrar_celda()
                 print("-----------------------------> ROBOT ENCARGADO: ")
-                robot_.mostrar_robot()
-                '''lista_tienen_rescate = buscar_ciudades('C', lista_ciudades)
-                lista_hay_robot = buscar_robot('ChapinRescue', lista_robots)
-                
-                nodo_tem_tienen = Esstructura_ciudades.Nodo('')
-                nodo_tem_tienen = lista_tienen_rescate.head
-                
-                nodo_tem_rob = Estructuras_robot.Nodo('')
-                nodo_tem_rob = lista_hay_robot.head
-
-                if nodo_tem_tienen != None and nodo_tem_rob != None:
-                    print("ESTAS CIUDADES TIENEN UNIDAD CIVIL DE RESCATE: ")
-                    print("")
-                    contador = 0
-                    contador_rob = 0
-                    while nodo_tem_tienen != None:
-                        contador += 1
-                        print("\t -----> "+str(contador)+" "+nodo_tem_tienen.objeto_ciudad.nombre)
-                        
-                        nodo_tem_tienen = nodo_tem_tienen.siguiente
-                        print("")
-                    print("Y ESTOS SON LOS ROBOTS DISPONIBLES: ")
-                    while nodo_tem_rob != None:
-                        contador_rob += 1
-                        print("\t -----> "+str(contador_rob)+" "+nodo_tem_rob.objeto_robot.nombre)  
-                        nodo_tem_rob = nodo_tem_rob.siguiente
-                    print("")
-                    if contador == 1:
-                                print("PUESTO QUE SOLO HAY UNA CIUDAD LA MISION SE LLEVARA ACABO EN ESTA")
-                                nodo_tem_tienen = lista_tienen_rescate.head
-                                ciudad_elegida = nodo_tem_tienen.objeto_ciudad
-                                lista_celdas = lista_rescates('C', nodo_tem_tienen.objeto_ciudad)
-                                print(nodo_tem_tienen.objeto_ciudad.nombre)
-                                nodo_celda = Estructuras_celda.Nodo('')
-                                nodo_celda = lista_celdas.head
-                                contador_celdas = 0
-                                while nodo_celda != None:
-                                    contador_celdas += 1
-                                    print(str(contador_celdas)+". --->"+"FILA: "+str(nodo_celda.objeto_celda.fila)+", COLUMNA: "+str(nodo_celda.objeto_celda.columna))
-                                    nodo_celda = nodo_celda.siguiente
-                                if contador_celdas == 1:
-                                    print("SOLO HAY UNA UNIDAD A RESCATAR ASI QUE LA MISION SE LLEVARA A CABO EN ESTA")
-                                    nodo_celda = lista_celdas.head
-                                    celda_rescatar  = nodo_celda.objeto_celda
-                                    
-
-                                else: 
-                                    opcion_celda = int(input("ELIJA LA UNIDAD QUE DESEA RESCATAR: "))
-                                    contador_celda_ele = 0
-                                    nodo_celda = lista_celdas.head
-                                    while nodo_celda != None:
-                                        contador_celda_ele += 1
-                                        if contador_celda_ele == opcion_celda:
-                                            celda_rescatar = nodo_celda.objeto_celda
-                                        nodo_celda = nodo_celda.siguiente
-                        
-                    else:
-                        opcion_ciudad = int(input("ELIJA EL NUMERO DE CIUDAD DONDE DESEA REALIZAR LA MISION: "))
-                        contador_ciu_ele = 0
-                        nodo_tem_tienen = lista_tienen_rescate.head
-                        while nodo_tem_tienen != None:
-                            contador_ciu_ele += 1
-                            if contador_ciu_ele == opcion_ciudad:
-                                ciudad_elegida = nodo_tem_tienen.objeto_ciudad
-                                lista_celdas = lista_rescates('C', nodo_tem_tienen.objeto_ciudad)
-                                print(nodo_tem_tienen.objeto_ciudad.nombre)
-                                nodo_celda = Estructuras_celda.Nodo('')
-                                nodo_celda = lista_celdas.head
-                                contador_celdas = 0
-                                while nodo_celda != None:
-                                    contador_celdas += 1
-                                    print(str(contador_celdas)+". --->"+"FILA: "+str(nodo_celda.objeto_celda.fila)+", COLUMNA: "+str(nodo_celda.objeto_celda.columna))
-                                    nodo_celda = nodo_celda.siguiente
-                                if contador_celdas == 1:
-                                    print("SOLO HAY UNA UNIDAD A RESCATAR ASI QUE LA MISION SE LLEVARA A CABO EN ESTA")
-                                    nodo_celda = lista_celdas.head
-                                    celda_rescatar  = nodo_celda.objeto_celda
-
-                                else: 
-                                    opcion_celda = int(input("ELIJA LA UNIDAD QUE DESEA RESCATAR: "))
-                                    contador_celda_ele = 0
-                                    nodo_celda = lista_celdas.head
-                                    while nodo_celda != None:
-                                        contador_celda_ele += 1
-                                        if contador_celda_ele == opcion_celda:
-                                            celda_rescatar = nodo_celda.objeto_celda
-                                        nodo_celda = nodo_celda.siguiente
-
-                                #lista_celdas.imprimirLista()
-                            
-                            nodo_tem_tienen = nodo_tem_tienen.siguiente
-                            print("")
-
-                    print(ciudad_elegida.nombre)
-                    celda_rescatar.mostrar_celda()
-
-                    if contador_rob == 1:
-                        print("SOLO HAY UN ROBOT ENTONCES ESTE EJECUTARA LA MISION")
-                        nodo_tem_rob = lista_hay_robot.head
-                        robot_elegido = nodo_tem_rob.objeto_robot
-                    else:
-                        opcion_rob_ele = int(input(" ELIJA EL ROBOT QUE LLEVARA A CABO LA MISION: "))
-                        contador_rob_ele = 0
-                        nodo_tem_rob = lista_hay_robot.head
-                        while nodo_tem_rob != None:
-                            contador_rob_ele += 1
-                            if contador_rob_ele == opcion_rob_ele:
-                                robot_elegido = nodo_tem_rob.objeto_robot
-                            nodo_tem_rob = nodo_tem_rob.siguiente
-                        
-                    print("")
-                    robot_elegido.mostrar_robot()
-  
-                else:
-                    print("NO SE PUEDE REALIZAR ESTA MISION PORQUE NO HAY LOS RECURSOS DISPONIBLES")'''
-                
+                robot_elegido.mostrar_robot()
 
             if opcion_mision == 2:############################### AQUI VA LA MISION 2
                 arreglo2 = Seleccionar_ciudad_celda('R','ChapinFighter', lista_ciudades, lista_robots )
                 print("")
                 print("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° RESUMEN DE MISION °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°")
-                ciudad_ = arreglo2[0]
-                celda_ = arreglo2[1]
-                robot_ = arreglo2[2]
-                print("------------> CIUDAD: \t"+ciudad_.nombre)
+                ciudad_elegida = arreglo2[0]
+                celda_rescatar = arreglo2[1]
+                robot_elegido = arreglo2[2]
+                civil = True
+                print("------------> CIUDAD: \t"+ciudad_elegida.nombre)
                 print("------------> CELDA A RESCATAR: ")
-                celda_.mostrar_celda()
+                celda_rescatar.mostrar_celda()
                 print("------------> ROBOT ENCARGADO: ")
-                robot_.mostrar_robot()
-                
+                robot_elegido.mostrar_robot()
+            
+            ################################### LLENANDO MATRIZ #######################################
+            lista_elegida = ciudad_elegida.filas
+            nodo_fila = Estructuras_filas.Nodo("")
+            nodo_fila = lista_elegida.head
+            
+            print("LLENANDO MATRIZ")
+            filaa = 1
+            while nodo_fila != None:
+                caracteres = nodo_fila.objeto_fila.lista
+                contador_col = 1
+                for caracter in caracteres:
+                    print(str(filaa)+","+str(contador_col))
+                    matriz.insertar(filaa, contador_col, caracter)
+                    contador_col +=1
+                filaa += 1
+
+                nodo_fila = nodo_fila.siguiente
+            
+            ################################### CAMBIAR MILITAR ###################################
+            nodo_mili = Estructura_unidad_mili.Nodo('')
+            nodo_mili = ciudad_elegida.unidades_militares.head
+
+            while nodo_mili != None:
+                fila_mili = nodo_mili.objeto_unidad.fila
+                col_mili = nodo_mili.objeto_unidad.columna
+                capacidad_mili = nodo_mili.objeto_unidad.capacidad
+                matriz.ubicaryCambiar(fila_mili, col_mili, capacidad_mili)
+            
+                nodo_mili = nodo_mili.siguiente
+ 
+        if(opcion == 3):
+            #################### PASAR MATRIZ A LISTA PARA GRAFICAR ###################
+            print("GRAFICANDO")
+            lista_graf = Estructuras_celda.ListaDoble_celda()
+            nodo = Estructuras_celda.Nodo('')
+            nodo = lista_graf.head
+            fil = int(ciudad_elegida.cant_filas)
+            col = int(ciudad_elegida.cant_columnas)
+            for i in range(1,fil+1,1):
+                for j in range(1,col+1,1):
+                    
+                    nodo = matriz.ubicarCoordenada(i,j)
+                    print(nodo.caracter)
+                    celda = Celda(i, j,nodo.caracter)
+                    lista_graf.añadirNodoPrincipio(celda)
+            lista_graf.imprimirLista()
+            Generar_graphviz(lista_graf,ciudad_elegida)
+
+        if(opcion == 4):
+            entrada = Ubicar_entrada(matriz, ciudad_elegida)
+            print("coordenadas entrada")
+            print(entrada[0])
+            print(entrada[1])
+            
+            if civil == True:
+                pass
+            if recurso == True:
+                pass
+            
+        if(opcion == 5):
+            print("ADIOOOOS!! :)")
+            salir = True
+                  
+def Ubicar_entrada(matriz_u, ciudad):
+        '''tmp = Nodo_Celda(1,1,'')
+        tmp = matriz.capa'''
+        coordenada = [0,0]
+        filas = int(ciudad.cant_filas)
+        
+
+        
+        for i in range(1,filas):
+            
+            tmp : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
+            while tmp != None:
+                if tmp.caracter == 'E':
+                    coordenada[0] = tmp.coordenadaX
+                    coordenada[1] = tmp.coordenadaY
+                tmp = tmp.derecha
+        
+        return coordenada
+
+'''def Ubicar_entrada(matriz_u, ciudad, celda_civil):
+        
+        coordenada = [0,0]
+        filas = int(ciudad.cant_filas)
+        x_fin = celda_civil.fila
+        y_fin = celda_civil.columna
+
+        
+        for i in range(1,filas):
+            
+            tmp : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
+            while tmp != None:
+                if tmp.caracter == 'E':
+                    coordenada[0] = tmp.coordenadaX
+                    coordenada[1] = tmp.coordenadaY
+                tmp = tmp.derecha
+        
+        return coordenada'''
+
+def Generar_graphviz(lista, ciudad):    
+    filas = int(ciudad.cant_filas)
+    columnas = int(ciudad.cant_columnas)
+
+    mi_archivo= open('matriz.dot','w')
+    mi_archivo.write("digraph L{")
+    mi_archivo.write("node[shape = box fillcolor = \"#FFEDBB\" style  = filled]")
+    mi_archivo.write("subgraph cluster_p{")
+    mi_archivo.write("label= \"MATRIZ\"")
+    mi_archivo.write("bgcolor = \"#398D9C\"")
+    mi_archivo.write("edge [dir = \"both\"]")
+    celda="celda"
+    contador = 1 
+    mensaje =''
+    print("*** Imprimiendo Celdas ***")
+    nodoTemporal = Estructuras_celda.Nodo("")
+
+    nodoTemporal = lista.head
+    
+ 
+    for i in range(filas):
+        for j in range(columnas):
+            mensaje =str(celda+str(contador))
+            color_celda = str(nodoTemporal.objeto_celda.tipo)
+            if color_celda.upper() == ' ':
+                color_celda = 'white'
+            elif color_celda.upper() == '*':
+                color_celda = 'black'
+            elif color_celda.upper() == '#':
+                color_celda = 'orange'
+            elif color_celda.upper() == 'E':
+                color_celda = 'green'
+            elif color_celda.upper() == 'C':
+                color_celda = 'blue'
+            elif color_celda.upper() == 'R':
+                color_celda = 'gray'
+            elif color_celda.isdigit():
+                color_celda = 'red'
+            else:
+                color_celda = 'yellow'   
+            nodoTemporal = nodoTemporal.siguiente
+            mi_archivo.write(mensaje+"[label= \""+str(contador)+"\", fillcolor ="+color_celda+", group = 2 ];")
+            contador += 1 
+
+    total_celdas = filas* columnas
+    
+    mensaje = ''
+    for j in range(1, total_celdas-filas+1, columnas):
+        contador2 = j
+        for i in range(1,columnas,1):
+            mensaje =str(celda+str(contador2))
+            sig_fila = str(celda+str(contador2+1))
+            mi_archivo.write(mensaje+"->"+sig_fila+";")
+            contador2+=1
+    
+    for j in range(1, total_celdas-filas+1, columnas):
+        contador2 = j
+        mi_archivo.write("{rank = same;")
+        for i in range(1,columnas+1,1):
+            mensaje =str(celda+str(contador2))
+            mi_archivo.write(mensaje+";")
+            contador2+=1
+
+        mi_archivo.write("}")
+
+    
+    
+    for j in range(1, columnas+1, 1):
+        for i in range(j,total_celdas-columnas+1,columnas):
+            mensaje =str(celda+str(i))
+            sig_fila = str(celda+str(i+columnas))
+            mi_archivo.write(mensaje+"->"+sig_fila+";")
+    
+
+    mi_archivo.write("}")
+    mi_archivo.write("}")
+
+    mi_archivo.close()
+
+    system('dot -Tpng matriz.dot -o matriz.png')
+    system('cd./matriz.png')
+    startfile('matriz.png')                
                 
 def Seleccionar_ciudad_celda(tipo_celda, tipo_robot, lista_ciudadess, lista_robotss):
                 lista_tienen_rescate = buscar_ciudades(tipo_celda, lista_ciudadess)
@@ -516,7 +588,7 @@ def lista_rescates (tipo, ciudad):
     
     while nodofila != None:
         caracteres = nodofila.objeto_fila.lista
-        contador_col = 0
+        contador_col = 1
         for caracter in caracteres:
             
             if caracter == tipo:
