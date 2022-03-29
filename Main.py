@@ -319,10 +319,27 @@ def menu():
             Generar_graphviz(lista_graf,ciudad_elegida)
 
         if(opcion == 4):
-            entrada = Ubicar_entrada(matriz, ciudad_elegida)
-            print("coordenadas entrada")
+            mat_aux = matriz
+            matriz_nueva = Ubicar_entrada(mat_aux, ciudad_elegida, celda_rescatar)
+            '''print("coordenadas entrada")
             print(entrada[0])
-            print(entrada[1])
+            print(entrada[1])'''
+            #################### PASAR MATRIZ A LISTA PARA GRAFICAR ###################
+            print("GRAFICANDO")
+            lista_graf = Estructuras_celda.ListaDoble_celda()
+            nodo = Estructuras_celda.Nodo('')
+            nodo = lista_graf.head
+            fil = int(ciudad_elegida.cant_filas)
+            col = int(ciudad_elegida.cant_columnas)
+            for i in range(1,fil+1,1):
+                for j in range(1,col+1,1):
+                    
+                    nodo = matriz_nueva.ubicarCoordenada(i,j)
+                    print(nodo.caracter)
+                    celda = Celda(i, j,nodo.caracter)
+                    lista_graf.añadirNodoPrincipio(celda)
+            lista_graf.imprimirLista()
+            Generar_graphviz(lista_graf,ciudad_elegida)
             
             if civil == True:
                 pass
@@ -333,24 +350,74 @@ def menu():
             print("ADIOOOOS!! :)")
             salir = True
                   
-def Ubicar_entrada(matriz_u, ciudad):
+def Ubicar_entrada(matriz_u, ciudad, celda_civil):
         '''tmp = Nodo_Celda(1,1,'')
         tmp = matriz.capa'''
         coordenada = [0,0]
         filas = int(ciudad.cant_filas)
-        
-
-        
-        for i in range(1,filas):
-            
+        x_fin = celda_civil.fila
+        y_fin = celda_civil.columna
+ 
+        for i in range(1,filas):   
             tmp : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
             while tmp != None:
-                if tmp.caracter == 'E':
-                    coordenada[0] = tmp.coordenadaX
-                    coordenada[1] = tmp.coordenadaY
+                if tmp.caracter == 'E': #SI ENCUENTRA UNA ENTRADA ENTONCES A PARTIR DE AQUI DEBE TRAZAR UN CAMINO
+                    #PRIMERO DEBEMOS SABER DONDE ESTA LA UNIDAD CIVIL SI A LA DERECHA O IQUIERDA
+                    fila = tmp.coordenadaX
+                    col = tmp.coordenadaY
+                    completada = False
+                    
+                    if col > y_fin and fila == x_fin:
+                        print("DEBO MOVERME A LA IZQUIERDA")
+                        #VEREMOS SI SE PUEDE MOVER A LA IZQUIERDA
+                        temp_cambia : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
+                        while temp_cambia != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                            if temp_cambia.coordenadaX == fila and temp_cambia.coordenadaY == col:
+                                print("encontre entrada")
+                                #AHORA QUE LO ENCONTRO DEBE CAMBIAR EL CAMINO
+                                while temp_cambia.coordenadaY != y_fin:#HASTA QUE LLEGE
+                                    print(temp_cambia.coordenadaY)
+                                    print(y_fin)
+                                    #SI PUEDE AVANZAR A LA IZQUIERDA
+                                    if temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
+                                        print("SI PUEDE TRANSITAR iz")
+                                        temp_cambia.izquierda.caracter = '#'
+                                    #SI PUEDE AVANZAR A LA DERECHA
+                                    elif temp_cambia.derecha.caracter == 'E' or temp_cambia.derecha.caracter == ' ' or temp_cambia.derecha.caracter == 'C':
+                                        print("SI PUEDE TRANSITAR dwer")
+                                        temp_cambia.derecha.caracter = '#'
+                                    #SI PUEDE AVANZAR HACIA ARRIBA
+                                    
+                                    
+                                    else:
+                                        print("no se puede transitar")
+                                        break
+                                    temp_cambia = temp_cambia.izquierda 
+                                break   
+                            temp_cambia = temp_cambia.getDerecha()
+                        
+                        if temp_cambia.coordenadaY == y_fin:
+                            print("MISION COMPLETADA")
+
+                            break
+                        else:
+                            print("MISION IMPOSIBLE")
+
+                    elif col < y_fin and fila == x_fin:
+                        print("DEBO MOVERME A LA IZQUIERDA")
+                    elif fila > x_fin and col == y_fin:
+                        print("DEBO MOVERME HACIA ARRIBA")
+                    elif fila < x_fin and col == y_fin:
+                        print("DEBO MOVERME HACIA ABAJO")
+
+
+                    '''coordenada[0] = tmp.coordenadaX
+                    coordenada[1] = tmp.coordenadaY'''
                 tmp = tmp.derecha
         
-        return coordenada
+        return matriz_u
+
+
 
 '''def Ubicar_entrada(matriz_u, ciudad, celda_civil):
         

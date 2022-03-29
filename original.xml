@@ -29,13 +29,13 @@
         <ciudad>
             <nombre filas="10" columnas="10">CiudadGuate</nombre>
             <fila numero="1">"**********"</fila>
-            <fila numero="2">"***   C  R"</fila>
+            <fila numero="2">"***      R"</fila>
             <fila numero="3">"*** ******"</fila>
             <fila numero="4">"*** ******"</fila>
-            <fila numero="5">"***     C*"</fila>
-            <fila numero="6">"E   ******"</fila>
-            <fila numero="7">"*** ****E*"</fila>
-            <fila numero="8">"*** *****C"</fila>
+            <fila numero="5">"***      *"</fila>
+            <fila numero="6">"*   *   **"</fila>
+            <fila numero="7">"***C  * E*"</fila>
+            <fila numero="8">"*** ***** "</fila>
             <fila numero="9">"*** ******"</fila>
             <fila numero="10">"***      R"</fila>
             <unidadMilitar fila="2" columna="5">10</unidadMilitar>
