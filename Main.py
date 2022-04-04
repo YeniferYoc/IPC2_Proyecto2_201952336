@@ -380,9 +380,9 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                 while salir_a != True:#HASTA QUE LLEGE
                                     
                                     print(temp_cambia.coordenadaY)
-                                    print(y_fin)
+                                    #print(y_fin)
                                     print(temp_cambia.coordenadaX)
-                                    print(x_fin)
+                                    #print(x_fin)
                                     ban_iz = False
                                     ban_der = False
                                     ban_arr = False
@@ -404,6 +404,8 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                     
 
                                     #SI PUEDE AVANZAR A LA IZQUIERDA
+                                    if temp_cambia.coordenadaY > y_fin:
+                                        
                                     if temp_cambia.izquierda != None:
                                         if temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
                                             print("SI PUEDE TRANSITAR iz")
@@ -412,10 +414,11 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                 salir_a = True
                                                 break
                                             else: 
+                                                print("cambie")
                                                 temp_cambia.izquierda.caracter = '#'
                                                 temp_cambia = temp_cambia.izquierda
                                                 ban_iz = True
-                                                continue
+                                              
                                                 
                                         else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
                                             nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
@@ -429,7 +432,7 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                             temp_cambia.coordenadaX = nodo_num.coordenadaX
                                                             temp_cambia.coordenadaY = nodo_num.coordenadaY
                                                             temp_cambia.caracter = '#'
-                                                            ban_iz = True
+                                                            ban_der = True
                                                             break
                                                         else: 
                                                             print("aquie no")
@@ -438,6 +441,7 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                             break
                                             
                                                 nodo_num = nodo_num.derecha
+                                                continue
 
                                     #este rogrmama 
                                     #SI PUEDE AVANZAR A LA DERECHA
@@ -463,8 +467,8 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                 if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaY == temp_cambia.coordenadaY:
                                                     #LO ENCONTRO
                                                     while nodo_num.caracter == '#':
-                                                        nodo_num = nodo_num.izquierda
-                                                    print(nodo_num.caracter+" fila "+str(nodo_num.coordenadaX)+" columna "+str(nodo_num.coordenadaY))
+                                                        nodo_num = nodo_num.derecha
+                                                    print(str(nodo_num.caracter)+" fila "+str(nodo_num.coordenadaX)+" columna "+str(nodo_num.coordenadaY))
                                                     if nodo_num != None:
                                                         if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
                                                             temp_cambia.coordenadaX = nodo_num.coordenadaX
@@ -481,6 +485,7 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                             break
                                             
                                                 nodo_num = nodo_num.derecha
+                                                continue
 
                                     else: 
                                         pass
@@ -497,7 +502,7 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                 temp_cambia.arriba.caracter = '#'
                                                 temp_cambia = temp_cambia.arriba
                                                 ban_arr = True
-                                                continue
+                                                
                                                 
                                     else:
                                         pass
@@ -513,17 +518,19 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                                 temp_cambia.abajo.caracter = '#'
                                                 temp_cambia = temp_cambia.abajo
                                                 ban_abb = True
-                                                continue
+                                               
                                                 
                                     else:
                                         pass
                                     
                                     
                                     if ban_der == True or ban_iz == True or ban_arr == True or ban_abb == True:
+                                        print("se activo un movimiento")
                                         ban_iz = False
                                         ban_der = False
                                         ban_arr = False
                                         ban_abb = False
+                                        print("--------------------------------------------------------")
                                     else:
                                         print("no se puede transitar")
                                         salir_a = True
