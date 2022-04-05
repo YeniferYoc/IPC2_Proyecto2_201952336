@@ -30,6 +30,8 @@ recurso = False
 robot_elegido = None
 matriz = Matriz()
 
+lista_celdas_cambios = Estructuras_celda.ListaDoble_celda()
+
 
 
 def menu(): 
@@ -320,7 +322,7 @@ def menu():
 
         if(opcion == 4):
             mat_aux = matriz
-            matriz_nueva = Ubicar_entrada(mat_aux, ciudad_elegida, celda_rescatar)
+            matriz_nueva = Ubicar_entrada(mat_aux, ciudad_elegida, celda_rescatar, robot_elegido)
             '''print("coordenadas entrada")
             print(entrada[0])
             print(entrada[1])'''
@@ -350,19 +352,23 @@ def menu():
             print("ADIOOOOS!! :)")
             salir = True
                   
-def Ubicar_entrada(matriz_u, ciudad, celda_civil):
+def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
         '''tmp = Nodo_Celda(1,1,'')
         tmp = matriz.capa'''
         coordenada = [0,0]
         filas = int(ciudad.cant_filas)
         x_fin = celda_civil.fila
         y_fin = celda_civil.columna
+        print("kfad")
+        print(filas)
+        comple = False
  
-        for i in range(1,filas):   
+        for i in range(1,filas+1):   
             tmp : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
             while tmp != None:
                 if tmp.caracter == 'E': #SI ENCUENTRA UNA ENTRADA ENTONCES A PARTIR DE AQUI DEBE TRAZAR UN CAMINO
                     #PRIMERO DEBEMOS SABER DONDE ESTA LA UNIDAD CIVIL SI A LA DERECHA O IQUIERDA
+                        print("enoslsjdfa")
                         fila = tmp.coordenadaX
                         col = tmp.coordenadaY
                         completada = False
@@ -375,9 +381,14 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                             if temp_cambia.coordenadaX == fila and temp_cambia.coordenadaY == col:
                                 print("encontre entrada")
                                 #AHORA QUE LO ENCONTRO DEBE CAMBIAR EL CAMINO
+                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
                                 temp_cambia.caracter = '#'
                                 salir_a = False
                                 while salir_a != True:#HASTA QUE LLEGE
+                                    if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                            print("MISION COMPLETADA")
+                                            salir_a = True
+                                            break
                                     
                                     print(temp_cambia.coordenadaY)
                                     #print(y_fin)
@@ -387,145 +398,730 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                     ban_der = False
                                     ban_arr = False
                                     ban_abb = False 
-
-                                    #VALIDACION DE NULOS 
-                                    '''nulo_iz = False
-                                    nulo_der = False
-                                    nulo_arr = False
-                                    nulo_abb = False
-                                    if temp_cambia.izquierda == None:
-                                        nulo_iz = True
-                                    if temp_cambia.derecha == None:
-                                        nulo_der = True
-                                    if temp_cambia.arriba == None:
-                                        nulo_arr = True
-                                    if temp_cambia.abajo == None:
-                                        nulo_abb = True'''
                                     
+                                    if temp_cambia.coordenadaY == y_fin: 
+                                        if temp_cambia.izquierda != None:
+                                            
+                                            
+                                            if temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
+                                                print("SI PUEDE TRANSITAR iz")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    print("cambie")
+                                                    temp_cambia.izquierda.caracter = '#'
+                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                    temp_cambia = temp_cambia.izquierda  
+                                                    ban_iz = True
+                                                
+                                                    
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                print(temp_cambia.izquierda.caracter+"iz")
+                                                print(temp_cambia.derecha.caracter+"der")
+                                                
+                                
+                                                nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaX == temp_cambia.coordenadaX:
+                                                        #LO ENCONTRO
+                                                        contador_av = 0
+                                                        while nodo_num.caracter == '#':
+                                                            contador_av += 1
+                                                            nodo_num = nodo_num.izquierda
+                                                        if nodo_num != None:
+                                                            if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
+                                                                for i in range(contador_av):
+                                                                    temp_cambia = temp_cambia.izquierda
+                                                                '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                temp_cambia.caracter = '#'
+                                                                
+                                                                ban_der = True
+                                                                break
+                                                            else: 
 
+                                                                if temp_cambia.izquierda.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA DERECHA
+                                                                    
+                                                                    if temp_cambia.derecha != None:
+                                                                        print("no es ssssnone")
+                                                                        print(temp_cambia.izquierda.caracter+"iaadf")
+                                                                        print(temp_cambia.derecha.caracter+"derecha muro")
+                                                                        if temp_cambia.derecha.caracter == '*':
+                                                                            break
+                                                                        
+                                                                        
+                                                                        elif temp_cambia.derecha.caracter == 'E' or temp_cambia.derecha.caracter == ' ' or temp_cambia.derecha.caracter == 'C':
+                                                                            print("SI PUEDE TRANSITAR dwer")
+                                                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                                                print("MISION COMPLETA")
+                                                                                salir_a = True
+                                                                                break 
+                                                                            else:
+                                                                                temp_cambia.derecha.caracter = '#'
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia = temp_cambia.derecha
+                                                                                ban_der = True
+
+                                                                        else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                                            print("puede ser un asterisco")
+                                                                            auxx= temp_cambia.coordenadaX
+                                                                            auxy = temp_cambia.coordenadaY
+                                                                            nodo_nume : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                                            while nodo_nume != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                                                if temp_cambia.coordenadaX == nodo_nume.coordenadaX and nodo_nume.coordenadaY == temp_cambia.coordenadaY:
+                                                                                    #LO ENCONTRO
+                                                                                    contador_avan = 0
+                                                                                    while nodo_nume.caracter == '#':
+                                                                                        contador_avan += 1
+                                                                                        nodo_nume = nodo_nume.derecha
+                                                                                    print(str(nodo_nume.caracter)+" fila "+str(nodo_nume.coordenadaX)+" columna "+str(nodo_nume.coordenadaY))
+                                                                                    if nodo_nume != None:
+                                                                                        if nodo_nume.caracter == 'E' or nodo_nume.caracter == ' ' or nodo_nume.caracter == 'C':
+                                                                                            for i in range(contador_avan):
+                                                                                                
+                                                                                                temp_cambia = temp_cambia.derecha
+                                                                                            '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                                            temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                            temp_cambia.caracter = '#'
+                                                                                            ban_der = True
+                                                                                            break
+                                                                                        else: 
+                                                                                            
+                                                                                            if temp_cambia.derecha.caracter.isdigit():
+                                                                                                combate = int(temp_cambia.derecha.caracter)
+                                                                                                #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                                                if robot.capacidad > combate:
+                                                                                                    print("UNIDAD VENCIDA")
+                                                                                                    robot.capacidad -= combate
+                                                                                                    temp_cambia = temp_cambia.derecha
+                                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                                    temp_cambia.caracter = '#'
+                                                                                                    break
+                                                                                            
+                                                                                nodo_nume = nodo_nume.derecha
+                                                                                continue                
+                                                                
+                                                                elif temp_cambia.izquierda.caracter.isdigit():
+                                                                    combate = int(temp_cambia.izquierda.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.izquierda
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#'
+
+                                                                    
+                                                                '''print(str(temp_cambia.coordenadaX)+" FILA MIO iz")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO iz")
+                                                                break'''
+                                                
+                                                    nodo_num = nodo_num.derecha
+                                                    continue
+                                        
+                                        if temp_cambia.derecha != None:
+                                            print("no es nolllne")
+                                            print(temp_cambia.izquierda.caracter)
+                                            print(temp_cambia.derecha.caracter)
+                                            if temp_cambia.derecha.caracter == 'E' or temp_cambia.derecha.caracter == ' ' or temp_cambia.derecha.caracter == 'C':
+                                                print("SI PUEDE TRANSITAR dwer")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break 
+                                                else:
+                                                    temp_cambia.derecha.caracter = '#'
+                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                    temp_cambia = temp_cambia.derecha
+                                                    ban_der = True
+
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                print("puede ser asterisco")
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        contador_avan = 0
+                                                        while nodo_num.caracter == '#':
+                                                            contador_avan += 1
+                                                            nodo_num = nodo_num.derecha
+                                                        print(str(nodo_num.caracter)+" fila "+str(nodo_num.coordenadaX)+" columna "+str(nodo_num.coordenadaY))
+                                                        if nodo_num != None:
+                                                            if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
+                                                                for i in range(contador_avan):
+                                                                    temp_cambia = temp_cambia.derecha
+                                                                '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                temp_cambia.caracter = '#'
+                                                                ban_der = True
+                                                                break
+                                                            else: 
+                                                                
+                                                                ####################################################################################################################
+                                                                if temp_cambia.derecha.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA IZQUIERDA
+                                                                    if temp_cambia.izquierda != None:
+                                                                        
+                                                                        print("no es none")
+                                                                        print(temp_cambia.izquierda.caracter)
+                                                                        print(temp_cambia.derecha.caracter)
+                                                                        if temp_cambia.izquierda.caracter == '*':
+                                                                            break
+                                                                        elif temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
+                                                                            print("SI PUEDE TRANSITAR izq uierda por el muro")
+                                                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                                                print("MISION COMPLETA")
+                                                                                salir_a = True
+                                                                                break 
+                                                                            else:
+                                                                                temp_cambia.izquierda.caracter = '#'
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia = temp_cambia.izquierda
+                                                                                ban_der = True
+
+                                                                        else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                                            print("puede ser asterisco")
+                                                                            auxx= temp_cambia.coordenadaX
+                                                                            auxy = temp_cambia.coordenadaY
+                                                                            nodo_numi : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                                            while nodo_numi != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                                                if temp_cambia.coordenadaX == nodo_numi.coordenadaX and nodo_numi.coordenadaY == temp_cambia.coordenadaY:
+                                                                                    #LO ENCONTRO
+                                                                                    contador_avan = 0
+                                                                                    while nodo_numi.caracter == '#':
+                                                                                        contador_avan += 1
+                                                                                        nodo_numi = nodo_numi.izquierda
+                                                                                    print(str(nodo_numi.caracter)+" fila "+str(nodo_numi.coordenadaX)+" columna "+str(nodo_numi.coordenadaY))
+                                                                                    if nodo_numi != None:
+                                                                                        if nodo_numi.caracter == 'E' or nodo_numi.caracter == ' ' or nodo_numi.caracter == 'C':
+                                                                                            for i in range(contador_avan):
+                                                                                                temp_cambia = temp_cambia.derecha
+                                                                                            '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                                            temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                            temp_cambia.caracter = '#'
+                                                                                            ban_der = True
+                                                                                            break
+                                                                                        else: 
+                                                                                            if temp_cambia.izquierda.caracter.isdigit():
+                                                                                                combate = int(temp_cambia.izquierda.caracter)
+                                                                                                #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                                                if robot.capacidad > combate:
+                                                                                                    print("UNIDAD VENCIDA")
+                                                                                                    robot.capacidad -= combate
+                                                                                                    temp_cambia = temp_cambia.izquierda
+                                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                                    temp_cambia.caracter = '#'
+                                                                                nodo_numi = nodo_numi.derecha
+                                                                                continue                
+                                                                
+                                                                elif temp_cambia.derecha.caracter.isdigit():
+                                                                    combate = int(temp_cambia.derecha.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.derecha
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#'
+
+                                                                ####################################################################################################################
+                                                
+                                                    nodo_num = nodo_num.derecha
+                                                    continue
+
+                                        else: 
+                                            pass
                                     #SI PUEDE AVANZAR A LA IZQUIERDA
-                                    if temp_cambia.coordenadaY > y_fin:
+                                    elif temp_cambia.coordenadaY > y_fin: 
+                                        print("jj")
                                         
-                                    if temp_cambia.izquierda != None:
-                                        if temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
-                                            print("SI PUEDE TRANSITAR iz")
-                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
-                                                print("MISION COMPLETA")
-                                                salir_a = True
-                                                break
-                                            else: 
-                                                print("cambie")
-                                                temp_cambia.izquierda.caracter = '#'
-                                                temp_cambia = temp_cambia.izquierda
-                                                ban_iz = True
-                                              
+                                        if temp_cambia.izquierda != None:
+                                            if temp_cambia.izquierda.caracter == 'E' or temp_cambia.izquierda.caracter == ' ' or temp_cambia.izquierda.caracter == 'C':
+                                                print("SI PUEDE TRANSITAR iz")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    print("cambie")
+                                                    temp_cambia.izquierda.caracter = '#'
+                                                    temp_cambia = temp_cambia.izquierda
+                                                    ban_iz = True
                                                 
-                                        else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
-                                            nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
-                                            while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
-                                                if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaX == temp_cambia.coordenadaX:
-                                                    #LO ENCONTRO
-                                                    while nodo_num.caracter == '#':
-                                                        nodo_num = nodo_num.derecha
-                                                    if nodo_num != None:
-                                                        if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
-                                                            temp_cambia.coordenadaX = nodo_num.coordenadaX
-                                                            temp_cambia.coordenadaY = nodo_num.coordenadaY
-                                                            temp_cambia.caracter = '#'
-                                                            ban_der = True
-                                                            break
-                                                        else: 
-                                                            print("aquie no")
-                                                            print(str(temp_cambia.coordenadaX)+" FILA MIO iz")
-                                                            print(str(temp_cambia.coordenadaY)+" COLUMNA MIO iz")
-                                                            break
-                                            
-                                                nodo_num = nodo_num.derecha
-                                                continue
+                                                    
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                
+                                                nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaX == temp_cambia.coordenadaX:
+                                                        #LO ENCONTRO
+                                                        contador_av = 0
+                                                        while nodo_num.caracter == '#':
+                                                            contador_av += 1
+                                                            nodo_num = nodo_num.izquierda
+                                                        if nodo_num != None:
+                                                            if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
+                                                                for i in range(contador_av):
+                                                                    temp_cambia = temp_cambia.izquierda
+                                                                '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_der = True
+                                                                break
+                                                            else: 
+                                                                print("aquie no")
 
-                                    #este rogrmama 
-                                    #SI PUEDE AVANZAR A LA DERECHA
-                                    if temp_cambia.derecha != None:
-                                        if temp_cambia.derecha.caracter == 'E' or temp_cambia.derecha.caracter == ' ' or temp_cambia.derecha.caracter == 'C':
-                                            print("SI PUEDE TRANSITAR dwer")
-                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
-                                                print("MISION COMPLETA")
-                                                salir_a = True
-                                                break 
-                                            else:
-                                                temp_cambia.derecha.caracter = '#'
-                                                temp_cambia = temp_cambia.derecha
-                                                ban_der = True
-                                                continue
+                                                                if temp_cambia.izquierda.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA DERECHA
+                                                                    if temp_cambia.derecha.caracter != None: 
+                                                                        if temp_cambia.derecha.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.derecha.caracter.isdigit():
+                                                                            combate = int(temp_cambia.derecha.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.derecha
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.izquierda.caracter.isdigit():
+                                                                    combate = int(temp_cambia.izquierda.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.izquierda
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break       
+                                                                    
+                                                                    
+                                                                    
+                                                                '''print(str(temp_cambia.coordenadaX)+" FILA MIO iz")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO iz")
+                                                                break'''
                                                 
-                                        
-                                        else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
-                                            auxx= temp_cambia.coordenadaX
-                                            auxy = temp_cambia.coordenadaY
-                                            nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
-                                            while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
-                                                if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaY == temp_cambia.coordenadaY:
-                                                    #LO ENCONTRO
-                                                    while nodo_num.caracter == '#':
-                                                        nodo_num = nodo_num.derecha
-                                                    print(str(nodo_num.caracter)+" fila "+str(nodo_num.coordenadaX)+" columna "+str(nodo_num.coordenadaY))
-                                                    if nodo_num != None:
-                                                        if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
-                                                            temp_cambia.coordenadaX = nodo_num.coordenadaX
-                                                            temp_cambia.coordenadaY = nodo_num.coordenadaY
-                                                            temp_cambia.caracter = '#'
-                                                            ban_der = True
-                                                            break
-                                                        else: 
-                                                            print("aquie no")
-                                                            temp_cambia.coordenadaX = auxx
-                                                            temp_cambia.coordenadaY = auxy
-                                                            print(str(temp_cambia.coordenadaX)+" FILA MIO")
-                                                            print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
-                                                            break
-                                            
-                                                nodo_num = nodo_num.derecha
-                                                continue
-
+                                                    nodo_num = nodo_num.derecha
+                                                    continue
                                     else: 
-                                        pass
+                                        print("ddd")
+                                        #este rogrmama 
+                                        #SI PUEDE AVANZAR A LA DERECHA
+                                        if temp_cambia.derecha != None:
+                                            print("no es none")
+                                            #print(temp_cambia.izquierda.caracter)
+                                            print(temp_cambia.derecha.caracter)
+                                            if temp_cambia.derecha.caracter == 'E' or temp_cambia.derecha.caracter == ' ' or temp_cambia.derecha.caracter == 'C':
+                                                print("SI PUEDE TRANSITAR dwer")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break 
+                                                else:
+                                                    temp_cambia.derecha.caracter = '#'
+                                                    temp_cambia = temp_cambia.derecha
+                                                    ban_der = True
+
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                print("puede ser asterisco")
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_num : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_num != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_num.coordenadaX and nodo_num.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        contador_avan = 0
+                                                        while nodo_num.caracter == '#':
+                                                            contador_avan += 1
+                                                            nodo_num = nodo_num.derecha
+                                                        print(str(nodo_num.caracter)+" fila "+str(nodo_num.coordenadaX)+" columna "+str(nodo_num.coordenadaY))
+                                                        if nodo_num != None:
+                                                            if nodo_num.caracter == 'E' or nodo_num.caracter == ' ' or nodo_num.caracter == 'C':
+                                                                for i in range(contador_avan):
+                                                                    temp_cambia = temp_cambia.derecha
+                                                                '''temp_cambia.coordenadaX = nodo_num.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_num.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_der = True
+                                                                break
+                                                            else: 
+                                                                if temp_cambia.derecha.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA iz
+                                                                    if temp_cambia.izquierda.caracter != None: 
+                                                                        if temp_cambia.izquierda.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.izquierda.caracter.isdigit():
+                                                                            combate = int(temp_cambia.izquierda.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.izquierda
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.derecha.caracter.isdigit():
+                                                                    combate = int(temp_cambia.derecha.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.derecha
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break       
+                                                                '''print("aquie no")
+                                                                temp_cambia.coordenadaX = auxx
+                                                                temp_cambia.coordenadaY = auxy
+                                                                print(str(temp_cambia.coordenadaX)+" FILA MIO")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
+                                                                break'''
+                                                
+                                                    nodo_num = nodo_num.derecha
+                                                    continue
+
+                                        else: 
+                                            pass
+                                    
+                                    
+                                    #SE MIRA LA FILA 2333333333333333333333333333333333
+                                    if temp_cambia.coordenadaX == x_fin:
+                                        if temp_cambia.abajo != None:
+                                            if temp_cambia.abajo.caracter == 'E' or temp_cambia.abajo.caracter == ' ' or temp_cambia.abajo.caracter == 'C' :
+                                                print("SI PUEDE TRANSITAR abb")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    temp_cambia.abajo.caracter = '#'
+                                                    temp_cambia = temp_cambia.abajo
+                                                    ban_abb = True
+                                            
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_numx : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_numx != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_numx.coordenadaX and nodo_numx.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        cont = 0
+                                                        while nodo_numx.caracter == '#':
+                                                            cont += 1
+                                                            nodo_numx = nodo_numx.abajo
+                                                        print(str(nodo_numx.caracter)+" fila "+str(nodo_numx.coordenadaX)+" columna "+str(nodo_numx.coordenadaY))
+                                                        if nodo_numx != None:
+                                                            if nodo_numx.caracter == 'E' or nodo_numx.caracter == ' ' or nodo_numx.caracter == 'C':
+                                                                for i in range(cont):
+                                                                    temp_cambia = temp_cambia.abajo
+                                                                '''temp_cambia.coordenadaX = nodo_numx.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_numx.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_abb = True
+                                                                break
+                                                            else: 
+                                                                if temp_cambia.abajo.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA iz
+                                                                    if temp_cambia.arriba.caracter != None: 
+                                                                        if temp_cambia.arriba.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.arriba.caracter.isdigit():
+                                                                            combate = int(temp_cambia.arriba.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.arriba
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.abajo.caracter.isdigit():
+                                                                    combate = int(temp_cambia.abajo.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.abajo
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break       
+                                                                '''print("aquie no")
+                                                                temp_cambia.coordenadaX = auxx
+                                                                temp_cambia.coordenadaY = auxy
+                                                                print(str(temp_cambia.coordenadaX)+" FILA MIO")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
+                                                                break'''
+                                                
+                                                    nodo_numx = nodo_numx.derecha
+                                                    continue
+                                                
+                                                    
+                                        else:
+                                            pass
+
+                                        if temp_cambia.arriba != None:
+                                            if temp_cambia.arriba.caracter == 'E' or temp_cambia.arriba.caracter == ' ' or temp_cambia.arriba.caracter == 'C' :
+                                                print("SI PUEDE TRANSITAR arr")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print(str(temp_cambia.coordenadaX)+","+str(temp_cambia.coordenadaY))
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    temp_cambia.arriba.caracter = '#'
+                                                    temp_cambia = temp_cambia.arriba
+                                                    ban_arr = True
+                                                
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_numx : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_numx != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_numx.coordenadaX and nodo_numx.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        contador_avance = 0
+                                                        while nodo_numx.caracter == '#':
+                                                            contador_avance += 1
+                                                            nodo_numx = nodo_numx.arriba
+                                                        print(str(nodo_numx.caracter)+" fila "+str(nodo_numx.coordenadaX)+" columna "+str(nodo_numx.coordenadaY))
+                                                        if nodo_numx != None:
+                                                            if nodo_numx.caracter == 'E' or nodo_numx.caracter == ' ' or nodo_numx.caracter == 'C':
+                                                                for i in range(contador_avance):
+                                                                    temp_cambia = temp_cambia.arriba
+
+                                                                
+                                                                '''temp_cambia.coordenadaX = nodo_numx.coordenadaX#hay que cambiar la posicion
+                                                                temp_cambia.coordenadaY = nodo_numx.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_arr = True
+                                                                break
+                                                            else: 
+                                                                if temp_cambia.arriba.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA iz
+                                                                    if temp_cambia.abajo.caracter != None: 
+                                                                        if temp_cambia.abajo.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.abajo.caracter.isdigit():
+                                                                            combate = int(temp_cambia.abajo.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.abajo
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.arriba.caracter.isdigit():
+                                                                    combate = int(temp_cambia.arriba.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.arriba
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break      
+                                                                '''print("aquie no")
+                                                                temp_cambia.coordenadaX = auxx
+                                                                temp_cambia.coordenadaY = auxy
+                                                                print(str(temp_cambia.coordenadaX)+" FILA MIO")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
+                                                                break'''
+                                                
+                                                    nodo_numx = nodo_numx.derecha
+                                                    continue
+                                                    
+                                                    
+                                        else:
+                                            pass
+
                                     #SI PUEDE AVANZAR HACIA ARRIBA
-                                    if temp_cambia.arriba != None:
-                                        if temp_cambia.arriba.caracter == 'E' or temp_cambia.arriba.caracter == ' ' or temp_cambia.arriba.caracter == 'C' :
-                                            print("SI PUEDE TRANSITAR arr")
-                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
-                                                print(str(temp_cambia.coordenadaX)+","+str(temp_cambia.coordenadaY))
-                                                print("MISION COMPLETA")
-                                                salir_a = True
-                                                break
-                                            else: 
-                                                temp_cambia.arriba.caracter = '#'
-                                                temp_cambia = temp_cambia.arriba
-                                                ban_arr = True
+                                    elif temp_cambia.coordenadaX > x_fin:
+                                        print("no se porque ")
+                                    
+                                        if temp_cambia.arriba != None:
+                                            if temp_cambia.arriba.caracter == 'E' or temp_cambia.arriba.caracter == ' ' or temp_cambia.arriba.caracter == 'C' :
+                                                print("SI PUEDE TRANSITAR arr")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print(str(temp_cambia.coordenadaX)+","+str(temp_cambia.coordenadaY))
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    temp_cambia.arriba.caracter = '#'
+                                                    temp_cambia = temp_cambia.arriba
+                                                    ban_arr = True
+                                            
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_numx : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_numx != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_numx.coordenadaX and nodo_numx.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        contadora = 0
+                                                        while nodo_numx.caracter == '#':
+                                                            contadora += 1
+                                                            nodo_numx = nodo_numx.arriba
+                                                        print(str(nodo_numx.caracter)+" fila "+str(nodo_numx.coordenadaX)+" columna "+str(nodo_numx.coordenadaY))
+                                                        if nodo_numx != None:
+                                                            if nodo_numx.caracter == 'E' or nodo_numx.caracter == ' ' or nodo_numx.caracter == 'C':
+                                                                for i in range(contadora):
+                                                                    temp_cambia = temp_cambia.arriba
+                                                                '''temp_cambia.coordenadaX = nodo_numx.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_numx.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_arr = True
+                                                                break
+                                                            else: 
+                                                                if temp_cambia.arriba.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA iz
+                                                                    if temp_cambia.abajo.caracter != None: 
+                                                                        if temp_cambia.abajo.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.abajo.caracter.isdigit():
+                                                                            combate = int(temp_cambia.abajo.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.abajo
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.arriba.caracter.isdigit():
+                                                                    combate = int(temp_cambia.arriba.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.arriba
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break       
+                                                                '''print("aquie no")
+                                                                temp_cambia.coordenadaX = auxx
+                                                                temp_cambia.coordenadaY = auxy
+                                                                print(str(temp_cambia.coordenadaX)+" FILA MIO")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
+                                                                break'''
                                                 
-                                                
-                                    else:
-                                        pass
+                                                    nodo_numx = nodo_numx.derecha
+                                                    continue
+                                                    
+                                                    
+                                        else:
+                                            pass
+                                    
                                     #SI PUEDE AVANZAR HACIA ABAJO
-                                    if temp_cambia.abajo != None:
-                                        if temp_cambia.abajo.caracter == 'E' or temp_cambia.abajo.caracter == ' ' or temp_cambia.abajo.caracter == 'C' :
-                                            print("SI PUEDE TRANSITAR abb")
-                                            if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
-                                                print("MISION COMPLETA")
-                                                salir_a = True
-                                                break
-                                            else: 
-                                                temp_cambia.abajo.caracter = '#'
-                                                temp_cambia = temp_cambia.abajo
-                                                ban_abb = True
-                                               
+                                    else: 
+                                        print("o aqui?")
+                                        if temp_cambia.abajo != None:
+                                            if temp_cambia.abajo.caracter == 'E' or temp_cambia.abajo.caracter == ' ' or temp_cambia.abajo.caracter == 'C' :
+                                                print("SI PUEDE TRANSITAR abb")
+                                                if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                                    print("MISION COMPLETA")
+                                                    salir_a = True
+                                                    break
+                                                else: 
+                                                    temp_cambia.abajo.caracter = '#'
+                                                    temp_cambia = temp_cambia.abajo
+                                                    ban_abb = True
+                                            
+                                            else:#EVALUAMOS SI SE PUEDE REGRESAR SIN PASAR POR EL NUMERAL
+                                                auxx= temp_cambia.coordenadaX
+                                                auxy = temp_cambia.coordenadaY
+                                                nodo_numx : Nodo_Celda = matriz_u.filas.getCabecera(temp_cambia.coordenadaX).getAcceso()
+                                                while nodo_numx != None: #EL TEMPORAL BUSCA LA POSICION DE LA ENTRADA
+                                                    if temp_cambia.coordenadaX == nodo_numx.coordenadaX and nodo_numx.coordenadaY == temp_cambia.coordenadaY:
+                                                        #LO ENCONTRO
+                                                        contador_hacia_ab = 0
+                                                        while nodo_numx.caracter == '#':
+                                                            contador_hacia_ab += 1
+                                                            nodo_numx = nodo_numx.abajo
+                                                        print(str(nodo_numx.caracter)+" fila "+str(nodo_numx.coordenadaX)+" columna "+str(nodo_numx.coordenadaY))
+                                                        if nodo_numx != None:
+                                                            if nodo_numx.caracter == 'E' or nodo_numx.caracter == ' ' or nodo_numx.caracter == 'C':
+                                                                for i in range(contador_hacia_ab):
+                                                                    temp_cambia = temp_cambia.abajo
+                                                                '''temp_cambia.coordenadaX = nodo_numx.coordenadaX
+                                                                temp_cambia.coordenadaY = nodo_numx.coordenadaY'''
+                                                                temp_cambia.caracter = '#'
+                                                                ban_abb = True
+                                                                break
+                                                            else:
+                                                                if temp_cambia.abajo.caracter == '*':
+                                                                    #ENTONCES ME MUEVO A LA iz
+                                                                    if temp_cambia.arriba.caracter != None: 
+                                                                        if temp_cambia.arriba.caracter == '*':
+                                                                            break
+                                                                            
+                                                                        elif temp_cambia.arriba.caracter.isdigit():
+                                                                            combate = int(temp_cambia.arriba.caracter)
+                                                                            #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                            if robot.capacidad > combate:
+                                                                                print("UNIDAD VENCIDA")
+                                                                                robot.capacidad -= combate
+                                                                                temp_cambia = temp_cambia.arriba
+                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                temp_cambia.caracter = '#'
+                                                                                break
+                                                                        break
+                                                                elif temp_cambia.abajo.caracter.isdigit():
+                                                                    combate = int(temp_cambia.abajo.caracter)
+                                                                    #ENTONCES ESTOY EN UNA CELDA ROJA
+                                                                    if robot.capacidad > combate:
+                                                                        print("UNIDAD VENCIDA")
+                                                                        robot.capacidad -= combate
+                                                                        temp_cambia = temp_cambia.abajo
+                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                        temp_cambia.caracter = '#' 
+                                                                        break        
+                                                                '''print("aquie no")
+                                                                temp_cambia.coordenadaX = auxx
+                                                                temp_cambia.coordenadaY = auxy
+                                                                print(str(temp_cambia.coordenadaX)+" FILA MIO")
+                                                                print(str(temp_cambia.coordenadaY)+" COLUMNA MIO")
+                                                                break'''
                                                 
-                                    else:
-                                        pass
+                                                    nodo_numx = nodo_numx.derecha
+                                                    continue
+                                                
+                                                    
+                                        else:
+                                            pass
                                     
                                     
                                     if ban_der == True or ban_iz == True or ban_arr == True or ban_abb == True:
                                         print("se activo un movimiento")
+
+                                        if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
+                                            print("MISION COMPLETADA")
+                                            salir_a = True
+                                            completada = True
+
+                                            break
                                         ban_iz = False
                                         ban_der = False
                                         ban_arr = False
@@ -538,10 +1134,9 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil):
                                 break   
                             temp_cambia = temp_cambia.getDerecha()
                         
-                        if temp_cambia.coordenadaY == y_fin:
+                        if temp_cambia.coordenadaY == y_fin and temp_cambia.coordenadaX == x_fin:
                             print("MISION COMPLETADA")
-                            salir_a = True
-
+                            completada = True
                             break
                         else:
                             print("MISION IMPOSIBLE")
