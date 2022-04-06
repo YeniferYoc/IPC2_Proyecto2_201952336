@@ -1,3 +1,4 @@
+from ast import Str
 from numpy import absolute, rec
 from xml.dom import minidom
 from graphviz import Graph
@@ -318,7 +319,7 @@ def menu():
                     celda = Celda(i, j,nodo.caracter)
                     lista_graf.añadirNodoPrincipio(celda)
             lista_graf.imprimirLista()
-            Generar_graphviz(lista_graf,ciudad_elegida)
+            Generar_graphviz(lista_graf,ciudad_elegida, celda_rescatar, robot_elegido)
 
         if(opcion == 4):
             mat_aux = matriz
@@ -341,7 +342,7 @@ def menu():
                     celda = Celda(i, j,nodo.caracter)
                     lista_graf.añadirNodoPrincipio(celda)
             lista_graf.imprimirLista()
-            Generar_graphviz(lista_graf,ciudad_elegida)
+            Generar_graphviz(lista_graf,ciudad_elegida, celda_rescatar, robot_elegido)
             
             if civil == True:
                 pass
@@ -362,16 +363,17 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
         print("kfad")
         print(filas)
         comple = False
+        completada = False
  
         for i in range(1,filas+1):   
             tmp : Nodo_Celda = matriz_u.filas.getCabecera(i).getAcceso()
             while tmp != None:
-                if tmp.caracter == 'E': #SI ENCUENTRA UNA ENTRADA ENTONCES A PARTIR DE AQUI DEBE TRAZAR UN CAMINO
+                if tmp.caracter == 'E' and completada == False: #SI ENCUENTRA UNA ENTRADA ENTONCES A PARTIR DE AQUI DEBE TRAZAR UN CAMINO
                     #PRIMERO DEBEMOS SABER DONDE ESTA LA UNIDAD CIVIL SI A LA DERECHA O IQUIERDA
                         print("enoslsjdfa")
                         fila = tmp.coordenadaX
                         col = tmp.coordenadaY
-                        completada = False
+                        
                     
                         #if col > y_fin and fila == x_fin: le puse un tab a la derecha
                         
@@ -495,13 +497,18 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                                             if temp_cambia.derecha.caracter.isdigit():
                                                                                                 combate = int(temp_cambia.derecha.caracter)
                                                                                                 #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                                                if robot.capacidad > combate:
-                                                                                                    print("UNIDAD VENCIDA")
-                                                                                                    robot.capacidad -= combate
-                                                                                                    temp_cambia = temp_cambia.derecha
-                                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                                    temp_cambia.caracter = '#'
+                                                                                                if robot.tipo == 'ChapinRescue':
                                                                                                     break
+                                                                                                else:
+                                                                                                    if robot.capacidad > combate:
+                                                                                                        print("UNIDAD VENCIDA")
+                                                                                                        robot.capacidad -= combate
+                                                                                                        temp_cambia = temp_cambia.derecha
+                                                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                                        temp_cambia.caracter = '#'
+                                                                                                        break
+                                                                                                    else:
+                                                                                                        pass
                                                                                             
                                                                                 nodo_nume = nodo_nume.derecha
                                                                                 continue                
@@ -509,12 +516,15 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                 elif temp_cambia.izquierda.caracter.isdigit():
                                                                     combate = int(temp_cambia.izquierda.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.izquierda
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#'
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.izquierda
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#'
 
                                                                     
                                                                 '''print(str(temp_cambia.coordenadaX)+" FILA MIO iz")
@@ -611,27 +621,34 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                                             ban_der = True
                                                                                             break
                                                                                         else: 
+                                                                                            
                                                                                             if temp_cambia.izquierda.caracter.isdigit():
                                                                                                 combate = int(temp_cambia.izquierda.caracter)
                                                                                                 #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                                                if robot.capacidad > combate:
-                                                                                                    print("UNIDAD VENCIDA")
-                                                                                                    robot.capacidad -= combate
-                                                                                                    temp_cambia = temp_cambia.izquierda
-                                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                                    temp_cambia.caracter = '#'
+                                                                                                if robot.tipo == 'ChapinRescue':
+                                                                                                    break
+                                                                                                else:
+                                                                                                    if robot.capacidad > combate:
+                                                                                                        print("UNIDAD VENCIDA")
+                                                                                                        robot.capacidad -= combate
+                                                                                                        temp_cambia = temp_cambia.izquierda
+                                                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                                        temp_cambia.caracter = '#'
                                                                                 nodo_numi = nodo_numi.derecha
                                                                                 continue                
                                                                 
                                                                 elif temp_cambia.derecha.caracter.isdigit():
                                                                     combate = int(temp_cambia.derecha.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.derecha
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#'
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.derecha
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#'
 
                                                                 ####################################################################################################################
                                                 
@@ -689,24 +706,30 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                         elif temp_cambia.derecha.caracter.isdigit():
                                                                             combate = int(temp_cambia.derecha.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.derecha
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.derecha
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
                                                                 elif temp_cambia.izquierda.caracter.isdigit():
                                                                     combate = int(temp_cambia.izquierda.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.izquierda
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break       
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.izquierda
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break       
                                                                     
                                                                     
                                                                     
@@ -758,33 +781,43 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                 ban_der = True
                                                                 break
                                                             else: 
-                                                                if temp_cambia.derecha.caracter == '*':
+                                                                print(temp_cambia.derecha.caracter)
+                                                                posi = temp_cambia.derecha.caracter
+                                                                if posi == '*':
                                                                     #ENTONCES ME MUEVO A LA iz
                                                                     if temp_cambia.izquierda.caracter != None: 
                                                                         if temp_cambia.izquierda.caracter == '*':
-                                                                            break
-                                                                            
+                                                                            pass
+                                                                        elif temp_cambia.izquierda.caracter == '#':
+                                                                            pass 
                                                                         elif temp_cambia.izquierda.caracter.isdigit():
                                                                             combate = int(temp_cambia.izquierda.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.izquierda
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.izquierda
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
-                                                                elif temp_cambia.derecha.caracter.isdigit():
+                                                                elif posi.isdigit():
+                                                                    print(temp_cambia.derecha.caracter)
                                                                     combate = int(temp_cambia.derecha.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.derecha
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break       
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if int(robot.capacidad) > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.derecha
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break       
                                                                 '''print("aquie no")
                                                                 temp_cambia.coordenadaX = auxx
                                                                 temp_cambia.coordenadaY = auxy
@@ -844,24 +877,30 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                         elif temp_cambia.arriba.caracter.isdigit():
                                                                             combate = int(temp_cambia.arriba.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.arriba
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.arriba
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
-                                                                elif temp_cambia.abajo.caracter.isdigit():
+                                                                elif temp_cambia.abajo.caracter.caracter.isdigit():
                                                                     combate = int(temp_cambia.abajo.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.abajo
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break       
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.abajo
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break       
                                                                 '''print("aquie no")
                                                                 temp_cambia.coordenadaX = auxx
                                                                 temp_cambia.coordenadaY = auxy
@@ -918,28 +957,35 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                     if temp_cambia.abajo.caracter != None: 
                                                                         if temp_cambia.abajo.caracter == '*':
                                                                             break
-                                                                            
+                                                                        elif temp_cambia.izquierda.caracter == '#':
+                                                                            pass  
                                                                         elif temp_cambia.abajo.caracter.isdigit():
                                                                             combate = int(temp_cambia.abajo.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.abajo
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.abajo
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
                                                                 elif temp_cambia.arriba.caracter.isdigit():
                                                                     combate = int(temp_cambia.arriba.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.arriba
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break      
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.arriba
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break      
                                                                 '''print("aquie no")
                                                                 temp_cambia.coordenadaX = auxx
                                                                 temp_cambia.coordenadaY = auxy
@@ -994,6 +1040,7 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                 break
                                                             else: 
                                                                 if temp_cambia.arriba.caracter == '*':
+                                                                    print("linea 1040")
                                                                     #ENTONCES ME MUEVO A LA iz
                                                                     if temp_cambia.abajo.caracter != None: 
                                                                         if temp_cambia.abajo.caracter == '*':
@@ -1002,24 +1049,30 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                         elif temp_cambia.abajo.caracter.isdigit():
                                                                             combate = int(temp_cambia.abajo.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.abajo
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.abajo
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
                                                                 elif temp_cambia.arriba.caracter.isdigit():
                                                                     combate = int(temp_cambia.arriba.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.arriba
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break       
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.arriba
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break       
                                                                 '''print("aquie no")
                                                                 temp_cambia.coordenadaX = auxx
                                                                 temp_cambia.coordenadaY = auxy
@@ -1080,24 +1133,30 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
                                                                         elif temp_cambia.arriba.caracter.isdigit():
                                                                             combate = int(temp_cambia.arriba.caracter)
                                                                             #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                            if robot.capacidad > combate:
-                                                                                print("UNIDAD VENCIDA")
-                                                                                robot.capacidad -= combate
-                                                                                temp_cambia = temp_cambia.arriba
-                                                                                lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                                temp_cambia.caracter = '#'
+                                                                            if robot.tipo == 'ChapinRescue':
                                                                                 break
+                                                                            else:
+                                                                                if robot.capacidad > combate:
+                                                                                    print("UNIDAD VENCIDA")
+                                                                                    robot.capacidad -= combate
+                                                                                    temp_cambia = temp_cambia.arriba
+                                                                                    lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                                    temp_cambia.caracter = '#'
+                                                                                    break
                                                                         break
                                                                 elif temp_cambia.abajo.caracter.isdigit():
                                                                     combate = int(temp_cambia.abajo.caracter)
                                                                     #ENTONCES ESTOY EN UNA CELDA ROJA
-                                                                    if robot.capacidad > combate:
-                                                                        print("UNIDAD VENCIDA")
-                                                                        robot.capacidad -= combate
-                                                                        temp_cambia = temp_cambia.abajo
-                                                                        lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
-                                                                        temp_cambia.caracter = '#' 
-                                                                        break        
+                                                                    if robot.tipo == 'ChapinRescue':
+                                                                        break
+                                                                    else:
+                                                                        if robot.capacidad > combate:
+                                                                            print("UNIDAD VENCIDA")
+                                                                            robot.capacidad -= combate
+                                                                            temp_cambia = temp_cambia.abajo
+                                                                            lista_celdas_cambios.añadirNodoPrincipio(temp_cambia)
+                                                                            temp_cambia.caracter = '#' 
+                                                                            break        
                                                                 '''print("aquie no")
                                                                 temp_cambia.coordenadaX = auxx
                                                                 temp_cambia.coordenadaY = auxy
@@ -1177,15 +1236,22 @@ def Ubicar_entrada(matriz_u, ciudad, celda_civil, robot):
         
         return coordenada'''
 
-def Generar_graphviz(lista, ciudad):    
+def Generar_graphviz(lista, ciudad, celda, rob):    
     filas = int(ciudad.cant_filas)
     columnas = int(ciudad.cant_columnas)
+    de_ = ' '
+    if celda.tipo == 'R':
+        de_ = 'RECURSO'
+    else:
+        de_ = 'CIVIL'
+
 
     mi_archivo= open('matriz.dot','w')
     mi_archivo.write("digraph L{")
     mi_archivo.write("node[shape = box fillcolor = \"#FFEDBB\" style  = filled]")
     mi_archivo.write("subgraph cluster_p{")
-    mi_archivo.write("label= \"MATRIZ\"")
+    mi_archivo.write("label= \"TIPO DE MISION: EXXTRACCION DE: "+de_+" RECURSO EXTRAIDO DE:"+str(celda.columna)+","+str(celda.fila)+" ROBOT:"+rob.nombre+" TIPO:"+rob.tipo+" CAPACIDAD:"+str(rob.capacidad)+" \"")
+    
     mi_archivo.write("bgcolor = \"#398D9C\"")
     mi_archivo.write("edge [dir = \"both\"]")
     celda="celda"
