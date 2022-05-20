@@ -3,7 +3,7 @@ YENIFER ESTER YOC LARIOS
 
 PROYECTO 2 IPC2, 
 
-Agregue el enunciado del proyecto, los archivos de calificacion, el error consiste en la funcion .isdigit(), para que funcione mejor, se debe crear un atributo mas en la clase celda, con bandera es o no militar, asi se evalua un True o un False y no se buguea. 
+Agregue el enunciado del proyecto, los archivos de calificacion, la hoja de caliificación, el error consiste en la funcion .isdigit(), para que funcione mejor, se debe crear un atributo mas en la clase celda, con bandera es o no militar, asi se evalua un True o un False y no se buguea. 
 
 Espero les sirva :)
 
